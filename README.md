@@ -114,15 +114,17 @@ VITE_API_URL=
 
 # Clonar o repositório
 
-git clone [https://github.com/seu-usuario/brev.ly.git](https://github.com/paulodantas-dev/rocketseat-projeto1.git)
+git clone [rocketseat-projeto1](https://github.com/paulodantas-dev/rocketseat-projeto1.git)
 cd rocketseat-projeto1
 
-# Iniciar containers e aplicação
+# Iniciar containers e aplicação web
 
 cd server
 docker-compose up --build
 
-npm run db:migrate
+cd web
+npm install
+npm run dev
 
 ## 📄 Licença
 

@@ -2,6 +2,7 @@ import { Form } from "@/components/form";
 import { MyLinks } from "@/components/my-links";
 import { SkeletonLink } from "@/components/skeleton-link";
 import { Button } from "@/components/ui/button";
+import { exportLinks } from "@/services/export-links";
 import { getLinks } from "@/services/get-links";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
@@ -11,6 +12,10 @@ export function HomePage() {
     queryKey: ["links"],
     queryFn: getLinks,
   });
+
+  const handleDownloadCsv = async () => {
+    await exportLinks();
+  };
 
   return (
     <div className="h-screen flex flex-col items-center justify-center w-full bg-[#E4E6EC]">
@@ -27,7 +32,12 @@ export function HomePage() {
           <section className="p-8 rounded-xl w-full max-w-96 lg:max-w-xl bg-[#F9F9FB] flex flex-col gap-5 ">
             <div className="flex items-center justify-between">
               <h2 className="text-[#1F2025] text-lg font-bold">Meus links</h2>
-              <Button className="cursor-pointer" variant={"secondary"}>
+              <Button
+                className="cursor-pointer"
+                variant={"secondary"}
+                onClick={handleDownloadCsv}
+                disabled={isLoading}
+              >
                 <Download />
                 Baixar CSV
               </Button>
