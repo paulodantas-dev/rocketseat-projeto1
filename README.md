@@ -114,8 +114,8 @@ VITE_API_URL=
 
 # Clonar o repositório
 
-git clone https://github.com/seu-usuario/brev.ly.git
-cd brev.ly
+git clone [https://github.com/seu-usuario/brev.ly.git](https://github.com/paulodantas-dev/rocketseat-projeto1.git)
+cd rocketseat-projeto1
 
 # Iniciar containers e aplicação
 
