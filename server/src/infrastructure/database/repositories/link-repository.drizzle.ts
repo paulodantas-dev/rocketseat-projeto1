@@ -6,8 +6,31 @@ import { db } from '../drizzle'
 import { linksTable } from '../drizzle/schema'
 import { NotFoundError } from '@/error-handler/types/not-found-error'
 import { eq } from 'drizzle-orm'
+import { format } from '@fast-csv/format'
+import { PassThrough } from 'node:stream'
 
 export class LinkRepositoryDatabase implements LinkRepository {
+  async exportShortenedLink(): Promise<PassThrough> {
+    const links = await db.select().from(linksTable)
+
+    const csvStream = format({ headers: true })
+    const passthrough = new PassThrough()
+    csvStream.pipe(passthrough)
+
+    for (const link of links) {
+      csvStream.write({
+        ID: link.id,
+        URL: link.long_url,
+        Shortened: link.shortened_link,
+        Clicks: link.clicks,
+        CriadoEm: link.created_at,
+      })
+    }
+
+    csvStream.end()
+
+    return passthrough
+  }
   async deleteShortenedLink(id: string): Promise<void> {
     const response = await fetch(`${env.API_URL!}/${id}`, {
       method: 'DELETE',

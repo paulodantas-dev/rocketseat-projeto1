@@ -13,6 +13,7 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { createShortenedLinkRoute } from '@/presentation/routes/link/create-shortened-link.route'
 import { deleteShortenedLinkRoute } from '@/presentation/routes/link/delete-shortened-link.route'
 import { listShortenedLinkRoute } from '@/presentation/routes/link/list-shortened-link.route'
+import { exportShortenedLinkRoute } from '@/presentation/routes/link/export-shortened-link.route'
 
 export function buildServer() {
   //start app
@@ -61,6 +62,7 @@ export function buildServer() {
   app.register(listShortenedLinkRoute, { prefix: '/api' })
   app.register(createShortenedLinkRoute, { prefix: '/api' })
   app.register(deleteShortenedLinkRoute, { prefix: '/api' })
+  app.register(exportShortenedLinkRoute, { prefix: '/api' })
 
   return app
 }
