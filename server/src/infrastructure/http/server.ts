@@ -1,0 +1,66 @@
+import { fastify } from 'fastify'
+import { fastifyCors } from '@fastify/cors'
+import { fastifySwagger } from '@fastify/swagger'
+import { fastifySwaggerUi } from '@fastify/swagger-ui'
+
+import {
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod'
+import { errorHandler } from '@/error-handler'
+import type { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { createShortenedLinkRoute } from '@/presentation/routes/link/create-shortened-link.route'
+import { deleteShortenedLinkRoute } from '@/presentation/routes/link/delete-shortened-link.route'
+import { listShortenedLinkRoute } from '@/presentation/routes/link/list-shortened-link.route'
+
+export function buildServer() {
+  //start app
+  const app = fastify({
+    logger: {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          messageFormat: '{msg}',
+          ignore: 'pid,hostname',
+        },
+      },
+    },
+  }).withTypeProvider<ZodTypeProvider>()
+
+  //zod integration compilers
+  app.setValidatorCompiler(validatorCompiler)
+  app.setSerializerCompiler(serializerCompiler)
+
+  //swagger docs
+  app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'Bitly API',
+        description: 'API Documentation for Bitly',
+        version: '1.0.0',
+      },
+    },
+    transform: jsonSchemaTransform,
+  })
+  app.register(fastifySwaggerUi, {
+    routePrefix: '/api/docs',
+  })
+
+  //pre-handlers
+  app.register(fastifyCors, {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  })
+
+  //error handler
+  app.setErrorHandler(errorHandler)
+
+  //link routes
+  app.register(listShortenedLinkRoute, { prefix: '/api' })
+  app.register(createShortenedLinkRoute, { prefix: '/api' })
+  app.register(deleteShortenedLinkRoute, { prefix: '/api' })
+
+  return app
+}

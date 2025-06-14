@@ -1,0 +1,50 @@
+services:
+  projeto1-api:
+    build:
+      context: .
+    container_name: projeto1-api
+    command: npm run dev
+    ports:
+      - '${APP_PORT}:3333'
+      - '5555:5555'
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./src/infrastructure/database/drizzle:/app/src/infrastructure/database/drizzle
+
+    depends_on:
+      projeto1_db:
+        condition: service_healthy
+    networks:
+      - projeto1_network
+    restart: always
+
+  projeto1_db:
+    image: postgres:15.11-alpine3.20
+    container_name: projeto1_db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - projeto1_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - projeto1_network
+    restart: always
+
+volumes:
+  projeto1_postgres_data:
+
+networks:
+  projeto1_network:
+    driver: bridge
