@@ -2,6 +2,7 @@ import { Files, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import type { LinkProps } from "@/types/link";
+import { Link } from "react-router";
 
 interface ItemLinkProps {
   link: LinkProps;
@@ -19,18 +20,26 @@ export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
         toast.error("Erro ao copiar o link.");
       });
   };
+
+  const encodedLink = encodeURIComponent(link.shortenedLink);
+
   return (
     <div key={link.id} className="flex items-center justify-between ">
       <div className="flex flex-col">
-        <span className="font-semibold text-sm text-[#2C46B1]">
+        <Link
+          to={`/redirect/${encodedLink}`}
+          className="font-semibold text-sm text-[#2C46B1] hover:underline"
+        >
           {link.shortenedLink}
-        </span>
-        <span className="text-[#4D505C] font-normal text-xs">
+        </Link>
+        <span className="text-[#4D505C] font-normal text-xs truncate lg:max-w-[230px] max-w-[130px]">
           {link.longUrl}
         </span>
       </div>
       <div className="flex items-center gap-5">
-        <span className="text-[#4D505C] font-normal text-xs">10 acessos</span>
+        <span className="text-[#4D505C] font-normal text-xs">
+          {link.clicks} acesso{link.clicks !== 1 ? "s" : ""}
+        </span>
         <div className="flex items-center gap-1">
           <Button
             size={"icon"}

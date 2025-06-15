@@ -5,16 +5,20 @@ import { Button } from "@/components/ui/button";
 import { exportLinks } from "@/services/export-links";
 import { getLinks } from "@/services/get-links";
 import { useQuery } from "@tanstack/react-query";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export function HomePage() {
+  const [loadingCsv, setLoadingCsv] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["links"],
     queryFn: getLinks,
   });
 
   const handleDownloadCsv = async () => {
+    setLoadingCsv(true);
     await exportLinks();
+    setLoadingCsv(false);
   };
 
   return (
@@ -36,9 +40,13 @@ export function HomePage() {
                 className="cursor-pointer"
                 variant={"secondary"}
                 onClick={handleDownloadCsv}
-                disabled={isLoading}
+                disabled={isLoading || loadingCsv}
               >
-                <Download />
+                {loadingCsv ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Download />
+                )}
                 Baixar CSV
               </Button>
             </div>

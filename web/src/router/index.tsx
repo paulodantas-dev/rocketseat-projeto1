@@ -9,7 +9,7 @@ export const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: "/redirect",
+    path: "/redirect/:linkId",
     element: <RedirectPage />,
   },
   {

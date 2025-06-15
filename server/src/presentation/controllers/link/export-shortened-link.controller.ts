@@ -14,13 +14,14 @@ export class ExportShortenedLinkController {
 
       const csvStream = await exportLink.exportShortenedLink()
 
-      return sendResponse({
-        reply,
-        success: true,
-        message: ['Link exported successfully'],
-        status: 200,
-        data: csvStream,
-      })
+      reply
+        .header('Content-Type', 'text/csv')
+        .header(
+          'Content-Disposition',
+          'attachment; filename="shortened_links.csv"',
+        )
+
+      return reply.send(csvStream)
     } catch (error) {
       return sendResponse({
         reply,

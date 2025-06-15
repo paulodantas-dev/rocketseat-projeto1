@@ -15,24 +15,9 @@ export function MyLinks({ links }: { links: LinkProps[] | undefined }) {
 
   const deleteLinkMutation = useMutation({
     mutationFn: deleteLink,
-    onMutate: async (linkId) => {
-      await queryClient.cancelQueries({ queryKey: ["links"] });
-      const previousData = queryClient.getQueryData<{ data: LinkProps[] }>([
-        "links",
-      ]);
-      queryClient.setQueryData(
-        ["links"],
-        (old: { data: LinkProps[] } | undefined) => {
-          if (!old) return { data: [] };
-          return {
-            data: old.data.filter((link) => link.id !== linkId),
-          };
-        }
-      );
-      return { previousData };
-    },
     onSuccess: () => {
       toast.success("Link excluído com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["links"] });
       setIsDialogOpen(false);
     },
     onError: () => {
@@ -66,6 +51,7 @@ export function MyLinks({ links }: { links: LinkProps[] | undefined }) {
       {isDialogOpen && (
         <ConfirmDeleteLinkDialog
           onConfirm={handleDeleteLink}
+          loading={deleteLinkMutation.isPending}
           isOpen={isDialogOpen}
           onClose={() => {
             setIsDialogOpen(false);

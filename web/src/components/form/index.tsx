@@ -22,6 +22,7 @@ export function Form() {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
     resolver: zodResolver(inputSchema),
@@ -35,27 +36,14 @@ export function Form() {
 
   const createMutation = useMutation({
     mutationFn: createLink,
-    onMutate: async (newLink) => {
-      await queryClient.cancelQueries({ queryKey: ["links"] });
-      const previousData = queryClient.getQueryData<{ data: Inputs[] }>([
-        "links",
-      ]);
-      queryClient.setQueryData(
-        ["links"],
-        (old: { data: Inputs[] } | undefined) => {
-          if (!old) return { data: [] };
-          return {
-            data: [...old.data, newLink],
-          };
-        }
-      );
-      return { previousData };
-    },
     onSuccess: () => {
       toast.success("Link criado com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["links"] });
+      reset();
     },
     onError: (error) => {
       toast.error(`Erro ao criar o link: ${error.message}`);
+      reset();
     },
   });
 

@@ -123,24 +123,22 @@ export class LinkRepositoryDatabase implements LinkRepository {
       updatedAt: string
     } = await response.json()
 
-    const newLink = {
+    await db.insert(linksTable).values({
+      id: data.id,
+      shortened_link: data.shortUrl,
+      long_url: data.destination,
+      created_at: data.createdAt,
+      updated_at: data.updatedAt,
+      clicks: data.clicks,
+    })
+
+    return new Link({
       id: data.id,
       shortenedLink: data.shortUrl,
       longUrl: data.destination,
+      clicks: data.clicks,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
-      clicks: data.clicks,
-    }
-
-    await db.insert(linksTable).values({
-      id: newLink.id,
-      shortened_link: newLink.shortenedLink,
-      long_url: newLink.longUrl,
-      created_at: newLink.createdAt,
-      updated_at: newLink.updatedAt,
-      clicks: newLink.clicks,
     })
-
-    return new Link(newLink)
   }
 }

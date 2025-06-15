@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -9,10 +10,12 @@ import {
 
 export function ConfirmDeleteLinkDialog({
   isOpen,
+  loading = false,
   onClose,
   onConfirm,
 }: {
   isOpen: boolean;
+  loading?: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }) {
@@ -28,17 +31,20 @@ export function ConfirmDeleteLinkDialog({
         </DialogHeader>
         <div className="flex justify-end gap-2">
           <Button
+            disabled={loading}
             variant="secondary"
             onClick={onClose}
-            className="cursor-pointer"
+            className="cursor-pointer w-32"
           >
             Cancelar
           </Button>
           <Button
+            disabled={loading}
             variant="destructive"
             onClick={onConfirm}
-            className="cursor-pointer"
+            className="cursor-pointer w-32"
           >
+            {loading && <Loader2 className="animate-spin" />}
             Excluir
           </Button>
         </div>
