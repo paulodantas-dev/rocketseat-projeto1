@@ -89,16 +89,26 @@ O repositório está dividido em duas pastas principais:
 ```env
 #REBRANDLY API
 API_TOKEN=
-
 API_URL=
 
+# DB
 DB_USER=
 DB_PASSWORD=
 DB_NAME=
 DB_HOST=
 DB_PORT=
-DATABASE_URL=
+DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
+
+# CLOUDFLARE R2
+CLOUDFLARE_R2_ACCESS_KEY=
+CLOUDFLARE_R2_SECRET_KEY=
+CLOUDFLARE_R2_ENDPOINT=
+CLOUDFLARE_R2_BUCKET_NAME=
+CLOUDFLARE_R2_PUBLIC_BASE_URL=
+
+
+# APP
 APP_PORT=
 APP_HOST=
 NODE_ENV=
@@ -112,19 +122,43 @@ VITE_API_URL=
 
 ### Instalação e execução
 
-# Clonar o repositório
+#### Clonar o repositório
 
 git clone [rocketseat-projeto1](https://github.com/paulodantas-dev/rocketseat-projeto1.git)
+
+```bash
 cd rocketseat-projeto1
+```
 
-# Iniciar containers e aplicação web
+#### Iniciar containers e aplicação web
 
+```bash
 cd server
-docker-compose up --build
+```
 
+```bash
+docker-compose up -d --build
+```
+
+```bash
 cd web
+```
+
+```bash
 npm install
+```
+
+```bash
+npm run build (opcional)
+```
+
+```bash
 npm run dev
+```
+
+```bash
+npm run preview (opcional)
+```
 
 ## 📄 Licença
 

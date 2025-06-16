@@ -5,16 +5,14 @@ export const exportLinks = async () => {
     method: "GET",
   });
 
-  const csv = await response.text();
+  const data = await response.json();
 
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
+  const url = data.data.url;
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = "links.csv";
+  a.download = "shortened_links.csv";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 };

@@ -6,30 +6,48 @@ import { db } from '../drizzle'
 import { linksTable } from '../drizzle/schema'
 import { NotFoundError } from '@/error-handler/types/not-found-error'
 import { eq } from 'drizzle-orm'
-import { format } from '@fast-csv/format'
-import { PassThrough } from 'node:stream'
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
 export class LinkRepositoryDatabase implements LinkRepository {
-  async exportShortenedLink(): Promise<PassThrough> {
+  async exportShortenedLink(): Promise<string> {
     const links = await db.select().from(linksTable)
 
-    const csvStream = format({ headers: true })
-    const passthrough = new PassThrough()
-    csvStream.pipe(passthrough)
+    const csvRows: string[] = []
+    csvRows.push('ID,URL,Shortened,Clicks,CriadoEm')
 
     for (const link of links) {
-      csvStream.write({
-        ID: link.id,
-        URL: link.long_url,
-        Shortened: link.shortened_link,
-        Clicks: link.clicks,
-        CriadoEm: link.created_at,
-      })
+      csvRows.push(
+        `${link.id},${link.long_url},${link.shortened_link},${link.clicks},${link.created_at}`,
+      )
     }
 
-    csvStream.end()
+    const csvContent = csvRows.join('\n')
+    const csvBuffer = Buffer.from(csvContent)
 
-    return passthrough
+    const fileName = `shortened_links_${Date.now()}.csv`
+
+    const s3 = new S3Client({
+      region: 'us-east-1',
+      endpoint: env.CLOUDFLARE_R2_ENDPOINT,
+      credentials: {
+        accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY,
+        secretAccessKey: env.CLOUDFLARE_R2_SECRET_KEY,
+      },
+    })
+
+    const bucketName = env.CLOUDFLARE_R2_BUCKET_NAME
+
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: fileName,
+        Body: csvBuffer,
+        ContentType: 'text/csv',
+      }),
+    )
+
+    const publicUrl = `${env.CLOUDFLARE_R2_PUBLIC_BASE_URL}/${fileName}`
+    return publicUrl
   }
   async deleteShortenedLink(id: string): Promise<void> {
     const response = await fetch(`${env.API_URL!}/${id}`, {

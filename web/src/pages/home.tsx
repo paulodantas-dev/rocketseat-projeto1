@@ -22,12 +22,12 @@ export function HomePage() {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center w-full bg-[#E4E6EC]">
-      <div className="flex flex-col w-full max-w-4xl gap-8">
+    <div className="h-screen flex flex-col items-center justify-center w-full bg-[#E4E6EC] ">
+      <div className="flex flex-col w-full max-w-4xl gap-8 overflow-scroll md:overflow-auto py-4">
         <div className="flex items-center justify-center lg:justify-start">
           <img src="/logo.svg" alt="Logo" />
         </div>
-        <main className="flex flex-col items-center  gap-5 lg:flex-row lg:items-start">
+        <main className="flex flex-col items-center px-4 gap-5 lg:flex-row lg:items-start">
           <section className="p-8 rounded-xl w-full max-w-96 bg-[#F9F9FB] flex flex-col gap-6">
             <h2 className="text-[#1F2025] text-lg font-bold">Novo Link</h2>
 

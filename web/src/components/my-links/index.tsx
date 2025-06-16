@@ -40,7 +40,7 @@ export function MyLinks({ links }: { links: LinkProps[] | undefined }) {
   return (
     <>
       {links && links.length > 0 ? (
-        <div className="flex flex-col gap-4 overflow-y-auto max-h-[400px]">
+        <div className="flex flex-col gap-4 overflow-y-auto max-h-[200px]">
           {links.map((link) => (
             <ItemLink link={link} onDeleteLink={onDeleteLink} />
           ))}

@@ -12,16 +12,15 @@ export class ExportShortenedLinkController {
     try {
       const exportLink = new LinkRepositoryDatabase()
 
-      const csvStream = await exportLink.exportShortenedLink()
+      const url = await exportLink.exportShortenedLink()
 
-      reply
-        .header('Content-Type', 'text/csv')
-        .header(
-          'Content-Disposition',
-          'attachment; filename="shortened_links.csv"',
-        )
-
-      return reply.send(csvStream)
+      return sendResponse({
+        reply,
+        status: 200,
+        success: true,
+        message: 'CSV exportado com sucesso.',
+        data: { url },
+      })
     } catch (error) {
       return sendResponse({
         reply,
