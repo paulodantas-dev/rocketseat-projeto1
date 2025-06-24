@@ -1,7 +1,7 @@
 import type { LinkProps } from "@/types/link";
 import type { Response } from "@/types/response";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export async function createLink(
   longUrl: string
