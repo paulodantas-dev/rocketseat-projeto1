@@ -5,7 +5,7 @@ services:
     container_name: projeto1-api
     command: npm run dev
     ports:
-      - '${APP_PORT}:3333'
+      - '${PORT}:3333'
       - '5555:5555'
     environment:
       - NODE_ENV=${NODE_ENV}
