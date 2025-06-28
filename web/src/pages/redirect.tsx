@@ -4,9 +4,7 @@ import { Link, useLocation } from "react-router";
 export function RedirectPage() {
   const location = useLocation();
 
-  const shortenedPath = location.pathname.replace("/redirect/", "");
-
-  const decodedPath = decodeURIComponent(shortenedPath);
+  const decodedPath = decodeURIComponent(location.pathname);
 
   useEffect(() => {
     const timer = setTimeout(() => {

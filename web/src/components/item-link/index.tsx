@@ -27,7 +27,7 @@ export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
     <div key={link.id} className="flex items-center justify-between ">
       <div className="flex flex-col">
         <Link
-          to={`/redirect/${encodedLink}`}
+          to={`/${encodedLink}`}
           className="font-semibold text-sm text-[#2C46B1] hover:underline"
         >
           {link.shortenedLink}

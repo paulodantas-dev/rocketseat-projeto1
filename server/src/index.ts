@@ -5,9 +5,9 @@ async function start() {
   const app = buildServer()
 
   try {
-    await app.listen({ port: env.APP_PORT, host: env.APP_HOST })
+    await app.listen({ port: env.PORT, host: env.APP_HOST })
     app.log.info(
-      `Server running at http://${env.APP_HOST}:${env.APP_PORT} API Docs available at http://${env.APP_HOST}:${env.APP_PORT}/docs`,
+      `Server running at http://${env.APP_HOST}:${env.PORT} API Docs available at http://${env.APP_HOST}:${env.PORT}/docs`,
     )
   } catch (err) {
     app.log.error('Server failed to start:', { err })

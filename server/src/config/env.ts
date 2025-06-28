@@ -6,7 +6,7 @@ import { NodeEnvEnum } from '../enums'
 dotenv.config()
 
 const envSchema = z.object({
-  APP_PORT: z.preprocess(
+  PORT: z.preprocess(
     (val) => Number(val),
     z.number().int().min(1024).max(65535).default(3333),
   ),
@@ -23,11 +23,11 @@ const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
   API_URL: z.string().optional(),
   API_TOKEN: z.string().optional(),
-  CLOUDFLARE_R2_ACCESS_KEY: z.string(),
-  CLOUDFLARE_R2_SECRET_KEY: z.string(),
-  CLOUDFLARE_R2_ENDPOINT: z.string(),
-  CLOUDFLARE_R2_BUCKET_NAME: z.string().default('brevly-csvs'),
-  CLOUDFLARE_R2_PUBLIC_BASE_URL: z.string(),
+  CLOUDFLARE_ACCESS_KEY_ID: z.string(),
+  CLOUDFLARE_SECRET_ACCESS_KEY: z.string(),
+  CLOUDFLARE_PUBLIC_URL: z.string(),
+  CLOUDFLARE_BUCKET: z.string().default('brevly-csvs'),
+  CLOUDFLARE_ENDPOINT: z.string(),
 })
 
 const parsedEnv = envSchema.parse(process.env)

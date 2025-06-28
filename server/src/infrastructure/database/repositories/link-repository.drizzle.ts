@@ -28,14 +28,14 @@ export class LinkRepositoryDatabase implements LinkRepository {
 
     const s3 = new S3Client({
       region: 'us-east-1',
-      endpoint: env.CLOUDFLARE_R2_ENDPOINT,
+      endpoint: env.CLOUDFLARE_ENDPOINT,
       credentials: {
-        accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY,
-        secretAccessKey: env.CLOUDFLARE_R2_SECRET_KEY,
+        accessKeyId: env.CLOUDFLARE_ACCESS_KEY_ID,
+        secretAccessKey: env.CLOUDFLARE_SECRET_ACCESS_KEY,
       },
     })
 
-    const bucketName = env.CLOUDFLARE_R2_BUCKET_NAME
+    const bucketName = env.CLOUDFLARE_BUCKET
 
     await s3.send(
       new PutObjectCommand({
@@ -46,7 +46,8 @@ export class LinkRepositoryDatabase implements LinkRepository {
       }),
     )
 
-    const publicUrl = `${env.CLOUDFLARE_R2_PUBLIC_BASE_URL}/${fileName}`
+    const publicUrl = `${env.CLOUDFLARE_PUBLIC_URL}/${fileName}`
+
     return publicUrl
   }
   async deleteShortenedLink(id: string): Promise<void> {

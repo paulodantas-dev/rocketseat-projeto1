@@ -69,7 +69,7 @@ O repositório está dividido em duas pastas principais:
 ### Páginas
 
 - `/`: Página inicial com cadastro e listagem de links
-- `/redirect`: Página de redirecionamento
+- `/:url-encurtada`: Página de redirecionamento
 - `*`: Página de "não encontrado"
 
 ---
@@ -101,15 +101,14 @@ DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_N
 
 
 # CLOUDFLARE R2
-CLOUDFLARE_R2_ACCESS_KEY=
-CLOUDFLARE_R2_SECRET_KEY=
-CLOUDFLARE_R2_ENDPOINT=
-CLOUDFLARE_R2_BUCKET_NAME=
-CLOUDFLARE_R2_PUBLIC_BASE_URL=
+CLOUDFLARE_ACCESS_KEY_ID=
+CLOUDFLARE_SECRET_ACCESS_KEY=
+CLOUDFLARE_PUBLIC_URL=
+CLOUDFLARE_BUCKET=
 
 
 # APP
-APP_PORT=
+PORT=
 APP_HOST=
 NODE_ENV=
 ```
@@ -117,7 +116,7 @@ NODE_ENV=
 #### `.env.example` (web)
 
 ```env
-VITE_API_URL=
+VITE_BACKEND_URL=
 ```
 
 ### Instalação e execução
