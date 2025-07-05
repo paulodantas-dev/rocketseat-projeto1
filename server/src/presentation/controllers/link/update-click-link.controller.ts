@@ -3,31 +3,28 @@ import type { FastifyRequest } from 'fastify/types/request'
 
 import { sendResponse } from '@/utils/send-response'
 import { LinkRepositoryDatabase } from '@/infrastructure/database/repositories/link-repository.drizzle'
-import { paramsSchema } from '@/presentation/routes/link/delete-shortened-link.route'
+import { bodySchema } from '@/presentation/routes/link/update-click-link.route'
 
-export class DeleteShortenedLinkController {
-  static async deleteShortenedLink(
-    request: FastifyRequest,
-    reply: FastifyReply,
-  ) {
-    const { id } = paramsSchema.parse(request.params)
-
+export class UpdateClickLinkController {
+  static async updateClick(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const deleteLink = new LinkRepositoryDatabase()
+      const { id } = bodySchema.parse(request.body)
 
-      await deleteLink.deleteShortenedLink(id)
+      const linkRepository = new LinkRepositoryDatabase()
+      await linkRepository.updateClicks(id)
 
       return sendResponse({
         reply,
         success: true,
-        message: ['Link deleted successfully'],
+        message: ['Link updated successfully'],
         status: 200,
+        data: null,
       })
     } catch (error) {
       return sendResponse({
         reply,
         error,
-        message: 'Error deleting shortened link',
+        message: 'Error updating link clicks',
       })
     }
   }

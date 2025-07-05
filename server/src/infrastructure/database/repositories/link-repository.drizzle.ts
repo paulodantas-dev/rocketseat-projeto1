@@ -7,6 +7,7 @@ import { linksTable } from '../drizzle/schema'
 import { NotFoundError } from '@/error-handler/types/not-found-error'
 import { eq } from 'drizzle-orm'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { randomUUID } from 'node:crypto'
 
 export class LinkRepositoryDatabase implements LinkRepository {
   async exportShortenedLink(): Promise<string> {
@@ -51,19 +52,13 @@ export class LinkRepositoryDatabase implements LinkRepository {
     return publicUrl
   }
   async deleteShortenedLink(id: string): Promise<void> {
-    const response = await fetch(`${env.API_URL!}/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: env.API_TOKEN!,
-      },
-    })
-
-    if (!response.ok) {
-      throw new BadRequest('Failed to delete shortened link.')
+    try {
+      await db.delete(linksTable).where(eq(linksTable.id, id))
+    } catch (error) {
+      throw new BadRequest(
+        'An error occurred while deleting the shortened link. Please try again.',
+      )
     }
-
-    await db.delete(linksTable).where(eq(linksTable.id, id))
   }
   async getAllShortenedLinks(): Promise<Link[]> {
     const links = await db.select().from(linksTable)
@@ -72,92 +67,90 @@ export class LinkRepositoryDatabase implements LinkRepository {
       throw new NotFoundError('No shortened links found.')
     }
 
-    const updatedLinks: Link[] = []
-
-    for (const link of links) {
-      const response = await fetch(`${env.API_URL}/${link.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: env.API_TOKEN!,
-        },
-      })
-
-      if (!response.ok) {
-        throw new BadRequest(
-          `Failed to fetch link data for ID: ${link.id}. Please try again later.`,
-        )
-      }
-
-      const rebrandData = await response.json()
-
-      await db
-        .update(linksTable)
-        .set({
-          clicks: rebrandData.clicks,
-          updated_at: rebrandData.updatedAt,
-        })
-        .where(eq(linksTable.id, link.id))
-
-      updatedLinks.push(
+    return links.map(
+      (link) =>
         new Link({
           id: link.id,
-          shortenedLink: link.shortened_link,
-          longUrl: link.long_url,
-          clicks: rebrandData.clicks,
+          clicks: link.clicks,
           createdAt: link.created_at,
-          updatedAt: rebrandData.updatedAt,
+          updatedAt: link.updated_at,
+          longUrl: link.long_url,
+          shortenedLink: link.shortened_link,
         }),
-      )
-    }
-
-    return updatedLinks
+    )
   }
-
-  async createShortenedLink(longUrl: string): Promise<Link> {
-    const response = await fetch(`${env.API_URL}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: env.API_TOKEN!,
-      },
-      body: JSON.stringify({
-        destination: longUrl,
-        domain: { fullName: 'rebrand.ly' },
-      }),
-    })
-
-    if (!response.ok) {
-      throw new BadRequest(
-        'Failed to create shortened link. Please check the long URL and try again.',
-      )
+  async createShortenedLink({
+    longUrl,
+    shortenedUrl,
+  }: {
+    longUrl: string
+    shortenedUrl: string
+  }): Promise<Link> {
+    const data = {
+      id: randomUUID(),
+      shortened_link: shortenedUrl,
+      long_url: longUrl,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      clicks: 0,
     }
 
-    const data: {
-      id: string
-      shortUrl: string
-      destination: string
-      clicks: number
-      createdAt: string
-      updatedAt: string
-    } = await response.json()
-
-    await db.insert(linksTable).values({
-      id: data.id,
-      shortened_link: data.shortUrl,
-      long_url: data.destination,
-      created_at: data.createdAt,
-      updated_at: data.updatedAt,
-      clicks: data.clicks,
-    })
+    try {
+      await db.insert(linksTable).values(data)
+    } catch (error) {
+      throw new BadRequest(
+        'An error occurred while creating the shortened link. Please try again.',
+      )
+    }
 
     return new Link({
       id: data.id,
-      shortenedLink: data.shortUrl,
-      longUrl: data.destination,
       clicks: data.clicks,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+      longUrl: data.long_url,
+      shortenedLink: data.shortened_link,
     })
+  }
+  async getShortenedLinkById(id: string): Promise<Link> {
+    const link = await db
+      .select()
+      .from(linksTable)
+      .where(eq(linksTable.id, id))
+      .limit(1)
+      .then((result) => result[0])
+
+    if (!link) {
+      throw new NotFoundError('Shortened link not found.')
+    }
+
+    return new Link({
+      id: link.id,
+      clicks: link.clicks,
+      createdAt: link.created_at,
+      updatedAt: link.updated_at,
+      longUrl: link.long_url,
+      shortenedLink: link.shortened_link,
+    })
+  }
+  async updateClicks(id: string): Promise<void> {
+    const link = await this.getShortenedLinkById(id)
+
+    if (!link) {
+      throw new NotFoundError('Shortened link not found.')
+    }
+
+    const totalClicks = link.getProps().clicks || 0
+
+    try {
+      await db
+        .update(linksTable)
+        .set({ clicks: totalClicks + 1, updated_at: new Date().toISOString() })
+        .where(eq(linksTable.id, id))
+    } catch (error) {
+      throw new BadRequest(
+        'An error occurred while updating the clicks. Please try again.',
+      )
+    }
   }
 }

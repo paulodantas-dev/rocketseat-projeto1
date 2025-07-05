@@ -10,11 +10,36 @@ export class CreateShortenedLinkController {
     request: FastifyRequest,
     reply: FastifyReply,
   ) {
-    const { longUrl } = bodySchema.parse(request.body)
+    const { longUrl, shortenedUrl } = bodySchema.parse(request.body)
 
     try {
       const newLink = new LinkRepositoryDatabase()
-      const createShortenedLink = await newLink.createShortenedLink(longUrl)
+
+      if (!shortenedUrl.startsWith('brev.ly/')) {
+        return sendResponse({
+          reply,
+          status: 400,
+          message: ['Invalid shortened URL'],
+        })
+      }
+
+      // Check if the shortened URL already exists
+      const existingLink = await newLink.getShortenedLinkById(shortenedUrl)
+
+      console.log('existingLink', existingLink)
+
+      if (existingLink) {
+        return sendResponse({
+          reply,
+          status: 409,
+          message: ['Shortened URL already exists'],
+        })
+      }
+
+      const createShortenedLink = await newLink.createShortenedLink({
+        longUrl,
+        shortenedUrl,
+      })
 
       return sendResponse({
         reply,
@@ -26,9 +51,8 @@ export class CreateShortenedLinkController {
     } catch (error) {
       return sendResponse({
         reply,
-        status: error instanceof Error ? 500 : 400,
-        message:
-          error instanceof Error ? error.message : 'An unknown error occurred',
+        error,
+        message: ['Error creating shortened link'],
       })
     }
   }

@@ -5,6 +5,7 @@ import { z } from 'zod'
 
 export const bodySchema = z.object({
   longUrl: z.string().url().describe('The long URL to be shortened'),
+  shortenedUrl: z.string().describe('The desired shortened URL'),
 })
 
 export async function createShortenedLinkRoute(app: FastifyInstance) {

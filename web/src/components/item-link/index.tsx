@@ -2,7 +2,7 @@ import { Files, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import type { LinkProps } from "@/types/link";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 interface ItemLinkProps {
   link: LinkProps;
@@ -10,6 +10,8 @@ interface ItemLinkProps {
 }
 
 export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
+  const navigate = useNavigate();
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard
       .writeText(text)
@@ -21,17 +23,16 @@ export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
       });
   };
 
-  const encodedLink = encodeURIComponent(link.shortenedLink);
-
   return (
     <div key={link.id} className="flex items-center justify-between ">
       <div className="flex flex-col">
-        <Link
-          to={`/${encodedLink}`}
-          className="font-semibold text-sm text-[#2C46B1] hover:underline"
+        <Button
+          variant={"link"}
+          onClick={() => navigate(`/${link.id}`)}
+          className="font-semibold text-sm text-[#2C46B1] hover:underline p-0 justify-start cursor-pointer"
         >
           {link.shortenedLink}
-        </Link>
+        </Button>
         <span className="text-[#4D505C] font-normal text-xs truncate lg:max-w-[230px] max-w-[130px]">
           {link.longUrl}
         </span>

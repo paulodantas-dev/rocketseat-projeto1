@@ -1,18 +1,29 @@
+import { getLink } from "@/services/get-link";
+import { updateClick } from "@/services/update-click";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router";
 
 export function RedirectPage() {
   const location = useLocation();
 
-  const decodedPath = decodeURIComponent(location.pathname);
+  const id = location.pathname.split("/").pop();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["links"],
+    queryFn: () => getLink(id!),
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.location.href = `https://${decodedPath}`;
-    }, 3000);
+    const handleRedirect = async () => {
+      if (!isLoading && data?.data?.longUrl && id) {
+        await updateClick(id);
+        window.location.href = data.data.longUrl;
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, [decodedPath]);
+    handleRedirect();
+  }, [isLoading, data, id]);
 
   return (
     <div className="h-screen flex flex-col items-center justify-center w-full bg-[#E4E6EC] p-3 lg:p-0">
@@ -24,7 +35,7 @@ export function RedirectPage() {
           O link será aberto automaticamente em alguns instantes. Não foi
           redirecionado?
           <Link
-            to={`https://${decodedPath}`}
+            to={`https://${data?.data?.longUrl}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#2C46B1] underline cursor-pointer"

@@ -48,7 +48,10 @@ export function Form() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await createMutation.mutateAsync(data.longLink);
+    await createMutation.mutateAsync({
+      longUrl: data.longLink,
+      shortenedUrl: data.shortLink,
+    });
   };
 
   return (

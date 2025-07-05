@@ -21,8 +21,6 @@ const envSchema = z.object({
     z.number().int().min(1024).max(65535).default(5432),
   ),
   DATABASE_URL: z.string().optional(),
-  API_URL: z.string().optional(),
-  API_TOKEN: z.string().optional(),
   CLOUDFLARE_ACCESS_KEY_ID: z.string(),
   CLOUDFLARE_SECRET_ACCESS_KEY: z.string(),
   CLOUDFLARE_PUBLIC_URL: z.string(),

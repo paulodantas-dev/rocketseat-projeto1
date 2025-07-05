@@ -14,6 +14,8 @@ import { createShortenedLinkRoute } from '@/presentation/routes/link/create-shor
 import { deleteShortenedLinkRoute } from '@/presentation/routes/link/delete-shortened-link.route'
 import { listShortenedLinkRoute } from '@/presentation/routes/link/list-shortened-link.route'
 import { exportShortenedLinkRoute } from '@/presentation/routes/link/export-shortened-link.route'
+import { getShortenedLinkRoute } from '@/presentation/routes/link/get-shortened-link.route'
+import { updateClickLinkRoute } from '@/presentation/routes/link/update-click-link.route'
 
 export function buildServer() {
   //start app
@@ -63,6 +65,8 @@ export function buildServer() {
   app.register(createShortenedLinkRoute, { prefix: '/api' })
   app.register(deleteShortenedLinkRoute, { prefix: '/api' })
   app.register(exportShortenedLinkRoute, { prefix: '/api' })
+  app.register(getShortenedLinkRoute, { prefix: '/api' })
+  app.register(updateClickLinkRoute, { prefix: '/api' })
 
   return app
 }

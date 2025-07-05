@@ -3,20 +3,14 @@ import type { Response } from "@/types/response";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
-export async function createLink({
-  longUrl,
-  shortenedUrl,
-}: {
-  longUrl: string;
-  shortenedUrl: string;
-}): Promise<Response<LinkProps>> {
-  const response = await fetch(`${API_URL}/create-link`, {
+export const updateClick = async (id: string): Promise<Response<LinkProps>> => {
+  const response = await fetch(`${API_URL}/update-click`, {
     method: "POST",
-    body: JSON.stringify({ longUrl, shortenedUrl }),
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ id }),
   });
 
   return await response.json();
-}
+};

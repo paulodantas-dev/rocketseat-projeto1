@@ -21,9 +21,8 @@ export class ListLinkController {
     } catch (error) {
       return sendResponse({
         reply,
-        status: error instanceof Error ? 500 : 400,
-        message:
-          error instanceof Error ? error.message : 'An unknown error occurred',
+        error,
+        message: 'Error retrieving links',
       })
     }
   }
