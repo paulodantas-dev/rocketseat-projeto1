@@ -5,18 +5,17 @@ import { LinkRepositoryDatabase } from '@/infrastructure/database/repositories/l
 import { sendResponse } from '@/utils/send-response'
 
 export class ListLinkController {
-  static async linkList(request: FastifyRequest, reply: FastifyReply) {
+  static async linkList(_: FastifyRequest, reply: FastifyReply) {
     try {
       const linkRepository = new LinkRepositoryDatabase()
 
       const links = await linkRepository.getAllShortenedLinks()
 
-      if (!links) {
+      if (!links || links.length === 0) {
         return sendResponse({
           reply,
-          success: false,
           message: ['No shortened links found'],
-          status: 404,
+          status: 200,
         })
       }
 
@@ -31,7 +30,6 @@ export class ListLinkController {
       return sendResponse({
         reply,
         error,
-
         message: 'Error retrieving links',
       })
     }

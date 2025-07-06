@@ -1,8 +1,8 @@
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Controller, type Control } from "react-hook-form";
-import type { Inputs } from "../form";
-import { cn } from "@/lib/utils";
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Controller, type Control } from 'react-hook-form';
+import type { Inputs } from '../form';
+import { cn } from '@/lib/utils';
 
 interface InputLabelProps {
   label: string;
@@ -31,9 +31,9 @@ export function InputLabel({
             </Label>
             <Input
               className={cn(
-                "",
+                '',
                 erroMessage &&
-                  "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/50 text-red-500 placeholder:text-red-500"
+                  'border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/50 text-red-500 placeholder:text-red-500',
               )}
               placeholder={placeholder}
               {...field}

@@ -1,17 +1,17 @@
-import { getLink } from "@/services/get-link";
-import { updateClick } from "@/services/update-click";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { getLink } from '@/services/get-link';
+import { updateClick } from '@/services/update-click';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from 'react-router';
 
 export function RedirectPage() {
   const location = useLocation();
 
-  const id = location.pathname.split("/").pop();
+  const id = location.pathname.split('/').pop();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["links"],
+    queryKey: ['links'],
     queryFn: () => getLink(id!),
   });
 

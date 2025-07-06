@@ -9,7 +9,7 @@ export function NotFoundPage() {
         </h2>
         <p className="text-[#4D505C] text-center font-semibold text-sm">
           O link que você está tentando acessar não existe, foi removido ou é
-          uma URL inválida. Saiba mais em{" "}
+          uma URL inválida. Saiba mais em{' '}
           <span className="text-[#2C46B1] underline cursor-pointer">
             brev.ly
           </span>

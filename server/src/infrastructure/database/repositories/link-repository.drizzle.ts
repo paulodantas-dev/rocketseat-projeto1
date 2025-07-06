@@ -1,15 +1,40 @@
-import { Link } from '@/domain/entities/link'
-import { LinkRepository } from '@/domain/repositories/link-repository.interface'
-import { env } from '@/config/env'
-import { BadRequest } from '@/error-handler/types/bad-request'
-import { db } from '../drizzle'
-import { linksTable } from '../drizzle/schema'
-import { NotFoundError } from '@/error-handler/types/not-found-error'
-import { eq } from 'drizzle-orm'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { randomUUID } from 'node:crypto'
 
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { eq } from 'drizzle-orm'
+
+import { env } from '@/config/env'
+import { Link } from '@/domain/entities/link'
+import type { LinkRepository } from '@/domain/repositories/link-repository.interface'
+import { BadRequest } from '@/error-handler/types/bad-request'
+import { NotFoundError } from '@/error-handler/types/not-found-error'
+
+import { db } from '../drizzle'
+import { linksTable } from '../drizzle/schema'
+
 export class LinkRepositoryDatabase implements LinkRepository {
+  async getLinkByShortenedUrl(shortenedUrl: string): Promise<Link | null> {
+    return db
+      .select()
+      .from(linksTable)
+      .where(eq(linksTable.shortened_link, shortenedUrl))
+      .limit(1)
+      .then((result) => {
+        const link = result[0]
+
+        if (!link) {
+          return null
+        }
+        return new Link({
+          id: link.id,
+          clicks: link.clicks,
+          createdAt: link.created_at,
+          updatedAt: link.updated_at,
+          longUrl: link.long_url,
+          shortenedLink: link.shortened_link,
+        })
+      })
+  }
   async exportShortenedLink(): Promise<string> {
     const links = await db.select().from(linksTable)
 
@@ -57,13 +82,14 @@ export class LinkRepositoryDatabase implements LinkRepository {
     } catch (error) {
       throw new BadRequest(
         'An error occurred while deleting the shortened link. Please try again.',
+        error,
       )
     }
   }
   async getAllShortenedLinks(): Promise<Link[]> {
     const links = await db.select().from(linksTable)
 
-    if (links.length === 0) {
+    if (!links) {
       throw new NotFoundError('No shortened links found.')
     }
 
@@ -100,6 +126,7 @@ export class LinkRepositoryDatabase implements LinkRepository {
     } catch (error) {
       throw new BadRequest(
         'An error occurred while creating the shortened link. Please try again.',
+        error,
       )
     }
 
@@ -150,6 +177,7 @@ export class LinkRepositoryDatabase implements LinkRepository {
     } catch (error) {
       throw new BadRequest(
         'An error occurred while updating the clicks. Please try again.',
+        error,
       )
     }
   }

@@ -1,11 +1,11 @@
-import type { LinkProps } from "@/types/link";
-import { toast } from "sonner";
-import { useState } from "react";
-import { ConfirmDeleteLinkDialog } from "../confirm-delete-link-dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EmptyLinks } from "../empty-links";
-import { ItemLink } from "../item-link";
-import { deleteLink } from "@/services/delete-link";
+import type { LinkProps } from '@/types/link';
+import { toast } from 'sonner';
+import { useState } from 'react';
+import { ConfirmDeleteLinkDialog } from '../confirm-delete-link-dialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { EmptyLinks } from '../empty-links';
+import { ItemLink } from '../item-link';
+import { deleteLink } from '@/services/delete-link';
 
 export function MyLinks({ links }: { links: LinkProps[] | undefined }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -16,12 +16,12 @@ export function MyLinks({ links }: { links: LinkProps[] | undefined }) {
   const deleteLinkMutation = useMutation({
     mutationFn: deleteLink,
     onSuccess: () => {
-      toast.success("Link excluído com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["links"] });
+      toast.success('Link excluído com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['links'] });
       setIsDialogOpen(false);
     },
     onError: () => {
-      toast.error("Erro ao excluir o link.");
+      toast.error('Erro ao excluir o link.');
       setIsDialogOpen(false);
     },
   });

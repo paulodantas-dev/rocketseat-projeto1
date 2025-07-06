@@ -1,19 +1,19 @@
-import { NotFoundPage } from "@/pages/404";
-import { HomePage } from "@/pages/home";
-import { RedirectPage } from "@/pages/redirect";
-import { createBrowserRouter } from "react-router";
+import { NotFoundPage } from '@/pages/404';
+import { HomePage } from '@/pages/home';
+import { RedirectPage } from '@/pages/redirect';
+import { createBrowserRouter } from 'react-router';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <HomePage />,
   },
   {
-    path: "/:url-encurtada",
+    path: '/:url-encurtada',
     element: <RedirectPage />,
   },
   {
-    path: "*",
+    path: '*',
     element: <NotFoundPage />,
   },
 ]);

@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 export function SkeletonLink() {
   return (
     <div className="flex items-center justify-between p-4">

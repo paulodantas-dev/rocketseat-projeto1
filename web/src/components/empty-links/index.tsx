@@ -1,5 +1,5 @@
-import { Link } from "lucide-react";
-import { Separator } from "../ui/separator";
+import { Link } from 'lucide-react';
+import { Separator } from '../ui/separator';
 
 export function EmptyLinks() {
   return (

@@ -1,12 +1,12 @@
-import { Loader2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Loader2 } from 'lucide-react';
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
+} from '../ui/dialog';
 
 export function ConfirmDeleteLinkDialog({
   isOpen,
