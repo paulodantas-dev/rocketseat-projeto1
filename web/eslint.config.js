@@ -1,54 +1,67 @@
-import js from "@eslint/js";
-import globals from "globals";
-import parser from "@typescript-eslint/parser";
-import tseslint from "typescript-eslint";
-
-import react from "eslint-plugin-react";
-import reactHooksPlugin from "eslint-plugin-react-hooks";
-import reactRefreshPlugin from "eslint-plugin-react-refresh";
-import prettierPlugin from "eslint-plugin-prettier";
-import tanstackQuery from "@tanstack/eslint-plugin-query";
-
-reactHooksPlugin.meta.name = "react-hooks";
-reactRefreshPlugin.meta.name = "react-refresh";
-prettierPlugin.meta.name = "prettier";
+const js = await import('@eslint/js')
+const globals = await import('globals')
+const parser = (await import('@typescript-eslint/parser')).default
+const eslintPluginTs = await import('@typescript-eslint/eslint-plugin')
+const react = await import('eslint-plugin-react')
+const reactHooks = await import('eslint-plugin-react-hooks')
+const reactRefresh = await import('eslint-plugin-react-refresh')
+const prettier = await import('eslint-plugin-prettier')
 
 export default [
   {
-    ignores: ["dist", "build", "node_modules"],
+    ignores: ['dist', 'build', 'node_modules'],
   },
   {
-    files: ["**/*.{js,ts,jsx,tsx}"],
+    files: ['**/*.{js,ts,jsx,tsx}'],
     languageOptions: {
       parser,
-      ecmaVersion: "latest",
-      sourceType: "module",
-      globals: globals.browser,
       parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
         },
       },
+      globals: {
+        ...globals.browser,
+      },
     },
-    plugins: [react, reactHooksPlugin, reactRefreshPlugin, prettierPlugin],
+    plugins: {
+      '@typescript-eslint': eslintPluginTs.default,
+      react: react.default,
+      'react-hooks': reactHooks.default,
+      'react-refresh': reactRefresh.default,
+      prettier: prettier.default,
+    },
     settings: {
       react: {
-        version: "detect",
+        version: 'detect',
       },
     },
     rules: {
-      ...js.configs.recommended.rules,
-      ...tseslint.configs.recommended.rules,
-      ...react.configs.recommended.rules,
-      ...reactHooksPlugin.configs.recommended.rules,
-      "react-refresh/only-export-components": [
-        "warn",
+      ...js.configs,
+
+      // Regras @typescript-eslint
+      'no-unused-vars': 'off', // Desliga a padrão
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/consistent-type-imports': 'error',
+
+      // React
+      'react/jsx-uses-react': 'warn',
+      'react/jsx-uses-vars': 'warn',
+      'react/react-in-jsx-scope': 'off',
+
+      // React hooks
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // Outros
+      'react-refresh/only-export-components': [
+        'warn',
         { allowConstantExport: true },
       ],
-      "prettier/prettier": "warn",
+      'prettier/prettier': 'warn',
+      'no-console': 'warn',
     },
   },
-  {
-    ...tanstackQuery.configs.recommended,
-  },
-];
+]
