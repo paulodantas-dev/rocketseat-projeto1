@@ -1,9 +1,9 @@
 import type { FastifyReply } from 'fastify/types/reply'
 import type { FastifyRequest } from 'fastify/types/request'
 
-import { sendResponse } from '@/utils/send-response'
-import { bodySchema } from '@/presentation/routes/link/create-shortened-link.route'
 import { LinkRepositoryDatabase } from '@/infrastructure/database/repositories/link-repository.drizzle'
+import { bodySchema } from '@/presentation/routes/link/create-shortened-link.route'
+import { sendResponse } from '@/utils/send-response'
 
 export class CreateShortenedLinkController {
   static async createShortenedLink(
@@ -14,19 +14,7 @@ export class CreateShortenedLinkController {
 
     try {
       const newLink = new LinkRepositoryDatabase()
-
-      if (!shortenedUrl.startsWith('brev.ly/')) {
-        return sendResponse({
-          reply,
-          status: 400,
-          message: ['Invalid shortened URL'],
-        })
-      }
-
-      // Check if the shortened URL already exists
-      const existingLink = await newLink.getShortenedLinkById(shortenedUrl)
-
-      console.log('existingLink', existingLink)
+      const existingLink = await newLink.getLinkByShortenedUrl(shortenedUrl)
 
       if (existingLink) {
         return sendResponse({

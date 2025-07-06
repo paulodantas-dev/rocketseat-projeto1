@@ -1,6 +1,7 @@
-import { ListLinkController } from '@/presentation/controllers/link/list-shortened-link.controller'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
+
+import { ListLinkController } from '@/presentation/controllers/link/list-shortened-link.controller'
 
 export async function listShortenedLinkRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(

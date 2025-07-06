@@ -1,20 +1,20 @@
-import { fastify } from 'fastify'
 import { fastifyCors } from '@fastify/cors'
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifySwaggerUi } from '@fastify/swagger-ui'
-
+import { fastify } from 'fastify'
+import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+
 import { errorHandler } from '@/error-handler'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { createShortenedLinkRoute } from '@/presentation/routes/link/create-shortened-link.route'
 import { deleteShortenedLinkRoute } from '@/presentation/routes/link/delete-shortened-link.route'
-import { listShortenedLinkRoute } from '@/presentation/routes/link/list-shortened-link.route'
 import { exportShortenedLinkRoute } from '@/presentation/routes/link/export-shortened-link.route'
 import { getShortenedLinkRoute } from '@/presentation/routes/link/get-shortened-link.route'
+import { listShortenedLinkRoute } from '@/presentation/routes/link/list-shortened-link.route'
 import { updateClickLinkRoute } from '@/presentation/routes/link/update-click-link.route'
 
 export function buildServer() {

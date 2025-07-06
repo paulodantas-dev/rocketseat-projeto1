@@ -1,33 +1,54 @@
 import js from "@eslint/js";
 import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
+import parser from "@typescript-eslint/parser";
 import tseslint from "typescript-eslint";
-import pluginQuery from "@tanstack/eslint-plugin-query";
 
-export default tseslint.config(
-  { ignores: ["dist"] },
+import react from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import reactRefreshPlugin from "eslint-plugin-react-refresh";
+import prettierPlugin from "eslint-plugin-prettier";
+import tanstackQuery from "@tanstack/eslint-plugin-query";
+
+reactHooksPlugin.meta.name = "react-hooks";
+reactRefreshPlugin.meta.name = "react-refresh";
+prettierPlugin.meta.name = "prettier";
+
+export default [
   {
-    extends: [
-      ...js.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...pluginQuery.configs.recommended,
-    ],
-    files: ["**/*.{ts,tsx}"],
+    ignores: ["dist", "build", "node_modules"],
+  },
+  {
+    files: ["**/*.{js,ts,jsx,tsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
+      parser,
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
-    plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
+    plugins: [react, reactHooksPlugin, reactRefreshPlugin, prettierPlugin],
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      ...js.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooksPlugin.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
+      "prettier/prettier": "warn",
     },
-  }
-);
+  },
+  {
+    ...tanstackQuery.configs.recommended,
+  },
+];

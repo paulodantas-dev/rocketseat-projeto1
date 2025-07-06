@@ -1,4 +1,5 @@
-import { LinkDTO } from '@/dtos/link/link.dto'
+import type { LinkDTO } from '@/dtos/link/link.dto'
+
 import { AggregateRoot } from '../core/aggregate-root'
 
 export class Link extends AggregateRoot<LinkDTO> {

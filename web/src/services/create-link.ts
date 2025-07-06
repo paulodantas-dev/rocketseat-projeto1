@@ -1,7 +1,6 @@
-import type { LinkProps } from "@/types/link";
-import type { Response } from "@/types/response";
-
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+import type { LinkProps } from '@/types/link';
+import type { Response } from '@/types/response';
+import { API } from './api';
 
 export async function createLink({
   longUrl,
@@ -9,14 +8,11 @@ export async function createLink({
 }: {
   longUrl: string;
   shortenedUrl: string;
-}): Promise<Response<LinkProps>> {
-  const response = await fetch(`${API_URL}/create-link`, {
-    method: "POST",
+}) {
+  const data = await API<Response<LinkProps>>('create-link', {
+    method: 'POST',
     body: JSON.stringify({ longUrl, shortenedUrl }),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
-  return await response.json();
+  return data;
 }

@@ -1,9 +1,9 @@
 import type { FastifyReply } from 'fastify/types/reply'
 import type { FastifyRequest } from 'fastify/types/request'
 
-import { sendResponse } from '@/utils/send-response'
 import { LinkRepositoryDatabase } from '@/infrastructure/database/repositories/link-repository.drizzle'
 import { querySchema } from '@/presentation/routes/link/get-shortened-link.route'
+import { sendResponse } from '@/utils/send-response'
 
 export class GetLinkController {
   static async getLink(request: FastifyRequest, reply: FastifyReply) {

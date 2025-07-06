@@ -1,9 +1,9 @@
 import type { FastifyReply } from 'fastify/types/reply'
 import type { FastifyRequest } from 'fastify/types/request'
 
-import { sendResponse } from '@/utils/send-response'
 import { LinkRepositoryDatabase } from '@/infrastructure/database/repositories/link-repository.drizzle'
 import { bodySchema } from '@/presentation/routes/link/update-click-link.route'
+import { sendResponse } from '@/utils/send-response'
 
 export class UpdateClickLinkController {
   static async updateClick(request: FastifyRequest, reply: FastifyReply) {

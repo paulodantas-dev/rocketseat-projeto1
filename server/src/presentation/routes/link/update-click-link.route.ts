@@ -1,7 +1,8 @@
-import { UpdateClickLinkController } from '@/presentation/controllers/link/update-click-link.controller'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+
+import { UpdateClickLinkController } from '@/presentation/controllers/link/update-click-link.controller'
 
 export const bodySchema = z.object({
   id: z.string().describe('The unique identifier for the shortened link'),

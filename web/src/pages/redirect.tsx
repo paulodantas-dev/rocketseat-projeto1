@@ -2,6 +2,7 @@ import { getLink } from "@/services/get-link";
 import { updateClick } from "@/services/update-click";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+
 import { Link, useLocation } from "react-router";
 
 export function RedirectPage() {

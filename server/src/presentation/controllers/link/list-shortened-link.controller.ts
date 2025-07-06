@@ -1,8 +1,8 @@
 import type { FastifyReply } from 'fastify/types/reply'
 import type { FastifyRequest } from 'fastify/types/request'
 
-import { sendResponse } from '@/utils/send-response'
 import { LinkRepositoryDatabase } from '@/infrastructure/database/repositories/link-repository.drizzle'
+import { sendResponse } from '@/utils/send-response'
 
 export class ListLinkController {
   static async linkList(request: FastifyRequest, reply: FastifyReply) {
@@ -10,6 +10,15 @@ export class ListLinkController {
       const linkRepository = new LinkRepositoryDatabase()
 
       const links = await linkRepository.getAllShortenedLinks()
+
+      if (!links) {
+        return sendResponse({
+          reply,
+          success: false,
+          message: ['No shortened links found'],
+          status: 404,
+        })
+      }
 
       return sendResponse({
         reply,
@@ -22,6 +31,7 @@ export class ListLinkController {
       return sendResponse({
         reply,
         error,
+
         message: 'Error retrieving links',
       })
     }

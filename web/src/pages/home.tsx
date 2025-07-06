@@ -1,17 +1,17 @@
-import { Form } from "@/components/form";
-import { MyLinks } from "@/components/my-links";
-import { SkeletonLink } from "@/components/skeleton-link";
-import { Button } from "@/components/ui/button";
-import { exportLinks } from "@/services/export-links";
-import { getLinks } from "@/services/get-links";
-import { useQuery } from "@tanstack/react-query";
-import { Download, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Form } from '@/components/form';
+import { MyLinks } from '@/components/my-links';
+import { SkeletonLink } from '@/components/skeleton-link';
+import { Button } from '@/components/ui/button';
+import { exportLinks } from '@/services/export-links';
+import { getLinks } from '@/services/get-links';
+import { useQuery } from '@tanstack/react-query';
+import { Download, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export function HomePage() {
   const [loadingCsv, setLoadingCsv] = useState(false);
   const { data, isLoading } = useQuery({
-    queryKey: ["links"],
+    queryKey: ['links'],
     queryFn: getLinks,
   });
 
@@ -38,7 +38,7 @@ export function HomePage() {
               <h2 className="text-[#1F2025] text-lg font-bold">Meus links</h2>
               <Button
                 className="cursor-pointer"
-                variant={"secondary"}
+                variant={'secondary'}
                 onClick={handleDownloadCsv}
                 disabled={isLoading || loadingCsv}
               >

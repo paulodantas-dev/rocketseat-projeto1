@@ -1,7 +1,8 @@
-import { GetLinkController } from '@/presentation/controllers/link/get-shortened-link.controller'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+
+import { GetLinkController } from '@/presentation/controllers/link/get-shortened-link.controller'
 
 export const querySchema = z.object({
   id: z.string().describe('The unique identifier for the shortened link'),

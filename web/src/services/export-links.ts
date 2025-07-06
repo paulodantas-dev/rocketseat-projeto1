@@ -1,18 +1,16 @@
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+import { API } from './api';
 
-export const exportLinks = async () => {
-  const response = await fetch(`${API_URL}/export-link`, {
-    method: "GET",
+export async function exportLinks() {
+  const data = await API<{ data: { url: string } }>(`export-link`, {
+    method: 'GET',
   });
-
-  const data = await response.json();
 
   const url = data.data.url;
 
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
-  a.download = "shortened_links.csv";
+  a.download = 'shortened_links.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-};
+}

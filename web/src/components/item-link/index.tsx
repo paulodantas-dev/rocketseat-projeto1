@@ -1,8 +1,8 @@
-import { Files, Trash } from "lucide-react";
-import { Button } from "../ui/button";
-import { toast } from "sonner";
-import type { LinkProps } from "@/types/link";
-import { Link, useNavigate } from "react-router";
+import { Files, Trash } from 'lucide-react';
+import { Button } from '../ui/button';
+import { toast } from 'sonner';
+import type { LinkProps } from '@/types/link';
+import { useNavigate } from 'react-router';
 
 interface ItemLinkProps {
   link: LinkProps;
@@ -16,10 +16,10 @@ export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        toast.success("Link copiado com sucesso!");
+        toast.success('Link copiado com sucesso!');
       })
       .catch(() => {
-        toast.error("Erro ao copiar o link.");
+        toast.error('Erro ao copiar o link.');
       });
   };
 
@@ -27,7 +27,7 @@ export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
     <div key={link.id} className="flex items-center justify-between ">
       <div className="flex flex-col">
         <Button
-          variant={"link"}
+          variant={'link'}
           onClick={() => navigate(`/${link.id}`)}
           className="font-semibold text-sm text-[#2C46B1] hover:underline p-0 justify-start cursor-pointer"
         >
@@ -39,20 +39,23 @@ export function ItemLink({ link, onDeleteLink }: ItemLinkProps) {
       </div>
       <div className="flex items-center gap-5">
         <span className="text-[#4D505C] font-normal text-xs">
-          {link.clicks} acesso{link.clicks !== 1 ? "s" : ""}
+          {link.clicks} acesso{link.clicks !== 1 ? 's' : ''}
         </span>
         <div className="flex items-center gap-1">
           <Button
-            size={"icon"}
-            variant={"secondary"}
+            size={'icon'}
+            variant={'secondary'}
             className="cursor-pointer"
-            onClick={() => copyToClipboard(link.shortenedLink)}
+            onClick={() => {
+              const redirectUrl = `${window.location.origin}/${link.id}`;
+              copyToClipboard(redirectUrl);
+            }}
           >
             <Files />
           </Button>
           <Button
-            size={"icon"}
-            variant={"secondary"}
+            size={'icon'}
+            variant={'secondary'}
             className="cursor-pointer"
             onClick={() => {
               onDeleteLink(link.id);

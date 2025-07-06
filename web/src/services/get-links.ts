@@ -1,9 +1,11 @@
-import type { LinkProps } from "@/types/link";
-import type { Response } from "@/types/response";
+import type { LinkProps } from '@/types/link';
+import type { Response } from '@/types/response';
+import { API } from './api';
 
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+export async function getLinks() {
+  const data = await API<Response<LinkProps[]>>(`list-links`, {
+    method: 'GET',
+  });
 
-export const getLinks = async (): Promise<Response<LinkProps[]>> => {
-  const response = await fetch(`${API_URL}/list-links`);
-  return await response.json();
-};
+  return data;
+}

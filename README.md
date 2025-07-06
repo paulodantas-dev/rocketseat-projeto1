@@ -87,10 +87,6 @@ O repositório está dividido em duas pastas principais:
 #### `.env.example` (server)
 
 ```env
-#REBRANDLY API
-API_TOKEN=
-API_URL=
-
 # DB
 DB_USER=
 DB_PASSWORD=

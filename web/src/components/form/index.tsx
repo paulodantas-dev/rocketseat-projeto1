@@ -1,19 +1,19 @@
-import { Button } from "../ui/button";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { InputLabel } from "../input-label";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createLink } from "@/services/create-link";
-import { toast } from "sonner";
+import { Button } from '../ui/button';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { InputLabel } from '../input-label';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createLink } from '@/services/create-link';
+import { toast } from 'sonner';
 
 const inputSchema = z.object({
   longLink: z
     .string()
-    .url("O link original deve ser uma URL válida.")
-    .nonempty("O link original é obrigatório."),
-  shortLink: z.string().min(9, "O link encurtado é obrigatório."),
+    .url('O link original deve ser uma URL válida.')
+    .nonempty('O link original é obrigatório.'),
+  shortLink: z.string().min(2, 'O link encurtado é obrigatório.'),
 });
 
 export type Inputs = z.infer<typeof inputSchema>;
@@ -27,8 +27,8 @@ export function Form() {
   } = useForm<Inputs>({
     resolver: zodResolver(inputSchema),
     defaultValues: {
-      longLink: "",
-      shortLink: "brev.ly/",
+      longLink: '',
+      shortLink: 'brev.ly/',
     },
   });
 
@@ -37,8 +37,8 @@ export function Form() {
   const createMutation = useMutation({
     mutationFn: createLink,
     onSuccess: () => {
-      toast.success("Link criado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["links"] });
+      toast.success('Link criado com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['links'] });
       reset();
     },
     onError: (error) => {
@@ -48,9 +48,13 @@ export function Form() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const shortenedUrl = data.shortLink.startsWith('brev.ly/')
+      ? data.shortLink
+      : `brev.ly/${data.shortLink}`;
+
     await createMutation.mutateAsync({
       longUrl: data.longLink,
-      shortenedUrl: data.shortLink,
+      shortenedUrl,
     });
   };
 

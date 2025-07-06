@@ -17,7 +17,7 @@ const config = [
         .default,
       'simple-import-sort': (await import('eslint-plugin-simple-import-sort'))
         .default,
-      'eslint-plugin-import': (await import('eslint-plugin-import')).default,
+      import: (await import('eslint-plugin-import')).default,
     },
     rules: {
       'simple-import-sort/imports': 'error',

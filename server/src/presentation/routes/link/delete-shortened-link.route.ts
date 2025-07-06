@@ -1,7 +1,8 @@
-import { DeleteShortenedLinkController } from '@/presentation/controllers/link/delete-shortened-link.controller'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+
+import { DeleteShortenedLinkController } from '@/presentation/controllers/link/delete-shortened-link.controller'
 
 export const paramsSchema = z.object({
   id: z.string().describe('The unique identifier for the shortened link'),

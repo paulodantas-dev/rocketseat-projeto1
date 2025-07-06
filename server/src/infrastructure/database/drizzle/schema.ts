@@ -1,4 +1,4 @@
-import { pgTable, varchar, integer } from 'drizzle-orm/pg-core'
+import { integer,pgTable, varchar } from 'drizzle-orm/pg-core'
 
 export const linksTable = pgTable('links', {
   id: varchar('id', { length: 255 }).primaryKey().notNull(),
