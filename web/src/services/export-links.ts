@@ -6,7 +6,6 @@ export async function exportLinks() {
   });
 
   const url = data.data.url;
-
   const a = document.createElement('a');
   a.href = url;
   a.download = 'shortened_links.csv';

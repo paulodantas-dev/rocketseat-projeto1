@@ -72,7 +72,7 @@ export class LinkRepositoryDatabase implements LinkRepository {
       }),
     )
 
-    const publicUrl = `${env.CLOUDFLARE_PUBLIC_URL}/${fileName}`
+    const publicUrl = `${env.CLOUDFLARE_PUBLIC_URL}/${bucketName}/${fileName}`
 
     return publicUrl
   }

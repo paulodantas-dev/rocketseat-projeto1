@@ -20,7 +20,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/infrastructure/database/drizzle ./src/infrastructure/database/drizzle
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
-COPY docker-entrypoint.sh .
+COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
 
 RUN chmod +x docker-entrypoint.sh
 
